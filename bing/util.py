@@ -18,7 +18,7 @@ def static_var(**kwargs):
 # DSP Algorithms
 
 # implementation of ta discrete fourier transform
-def dft(x: np.array) -> np.array:
+def dft(x):
     N = len(x)
     freq_bin = [0]*N
 
@@ -30,7 +30,7 @@ def dft(x: np.array) -> np.array:
 
 
 # implementation of the cooley-tukey algorithm
-def cooley_tukey(x: np.array) -> np.array:
+def cooley_tukey(x):
     N = len(x)
     if N <= 1:
         return x
@@ -48,7 +48,7 @@ def cooley_tukey(x: np.array) -> np.array:
 
 
 # Function to compute the envelope of a signal
-def envelope(x: np.array) -> np.array:
+def envelope(x):
     # basically this is an implementation of the exponential moving average
     # https://www.investopedia.com/terms/e/ema.asp for more info
     # smooth out data
