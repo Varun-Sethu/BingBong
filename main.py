@@ -1,7 +1,8 @@
 import pyaudio
 import time
 import numpy as np
-from bing import Note_Detector
+from bing.musical_detection import Note_Detector
+
 
 
 RATE          = 44100

@@ -1,8 +1,8 @@
 import pyaudio
 import numpy as np
 
-from __init__ import RATE, CHUNK, CHANNELS, SILENCE_THRESHOLD
-from util import static_var, envelope
+from .__init__ import RATE, CHUNK, CHANNELS, SILENCE_THRESHOLD
+from .util import static_var, envelope
 
 
 
@@ -34,7 +34,7 @@ def __compute_mask(audio_data):
 
 # function that processes a chunk of audio data
 @static_var(incomplete_signal=None, prev_state="")
-def breakup(audio_data, prev_chunk): 
+def breakup(audio_data): 
     mask = compute_mask(audio_data)
 
     # Chop the last entry if the mask is incmplete
@@ -52,12 +52,12 @@ def breakup(audio_data, prev_chunk):
 
 
     # This chunk just appends the rest of the real audio signal to the final output
-    for i in range(len(temp_mask), step=2)
+    for i in range(len(temp_mask), step=2):
         data_chunks.append([audio_data[temp_mask[i]: temp_mask[i+1]]])
 
 
     # Now we just have to deal with incomplete signals, basically these get passed onto the next function call to deal with
-    if mask - temp_mask != None
+    if mask - temp_mask != None:
         region = mask[-1][1]
         breakup.incomplete_signal = audio_data[region:]
         breakup.prev_state = "start"

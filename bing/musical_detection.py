@@ -1,9 +1,11 @@
 # Lib that just deals with the detection of musical notes
 import numpy as np
-import util
+import matplotlib.pyplot as plt
 from collections import deque
 
-from processing import breakup
+from .processing import breakup
+from . import util
+
 
 
 
@@ -16,11 +18,21 @@ class Note_Detector:
 
 
     def process(self, chunk):
-        detected_sounds = breakup(chunk)
-        for sound in detected_sounds:
-            detected_note = self.__identify_note(chunk)
-            if detected_note != None:
-                self.detected_notes.append(detected_note)
+        # testing the envelope function
+        envelope = util.envelope(chunk)
+        fig = plt.figure()
+        s = fig.add_subplot(111)
+        s.plot(chunk)
+        s.plot(envelope)
+        plt.show()
+
+
+
+        # detected_sounds = breakup(chunk)
+        # for sound in detected_sounds:
+        #     detected_note = self.__identify_note(chunk)
+        #     if detected_note != None:
+        #         self.detected_notes.append(detected_note)
 
 
 
