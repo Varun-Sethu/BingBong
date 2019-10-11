@@ -19,6 +19,7 @@ def static_var(**kwargs):
 
 # implementation of ta discrete fourier transform
 def dft(x):
+    x = pad(x)
     N = len(x)
     freq_bin = [0]*N
 
@@ -31,6 +32,7 @@ def dft(x):
 
 # implementation of the cooley-tukey algorithm
 def cooley_tukey(x):
+    x = pad(x)
     N = len(x)
     if N <= 1:
         return x
@@ -66,7 +68,7 @@ def envelope(x):
     N = len(data)
     envelope = np.full((N), 0.0, dtype=np.float64)
     SMA_LIM = 30
-    SMOOTHING_FACTOR = 0.002
+    SMOOTHING_FACTOR = 0.003
 
     # Compute a SMA for the first 30 samples
     for i in range(1, SMA_LIM+1):

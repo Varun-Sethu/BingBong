@@ -24,7 +24,7 @@ stream.start_stream()
 print("Determining silence threshold....")
 # Record data for 10 seconds
 data = np.array([])
-for i in range(0, RATE // CHUNK * 1):
+for i in range(0, RATE // CHUNK * 10):
     raw_data = stream.read(CHUNK)
     audio_data = np.frombuffer(raw_data, dtype=np.float32)
     data = np.append(data, audio_data)    

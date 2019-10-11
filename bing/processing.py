@@ -13,17 +13,19 @@ from .util import static_var, envelope
 def __compute_mask(audio_data):
     mask = []
     audio_envelope = envelope(audio_data)
-
     # w can be adjusted according to your preferences
-    w = 0.05
-    for i, env_val in enumerate(audio_envelope):
-        if env_val - SILENCE_THRESHOLD * (1.0 + w) <= 0:
-            # determine the state of this slice, this is a joke btw :)
-            state = {
-                True: "start",
-                False: "end"
-            }[mask[-1] == None or mask[-1][0] == "end"]
-            mask.append((state, i))
+    w = 0.3
+    upper_silence_threshold = SILENCE_THRESHOLD * (1.0 + w)
+
+    for i in range(0, len(audio_envelope)):
+        env_val = audio_envelope[i]
+
+        # Get the current state of mask
+        curr_state = mask[-1][0] if len(mask) != 0 else "end"
+        if curr_state is "start" and env_val < upper_silence_threshold:
+            mask.append(["end", i])
+        elif curr_state is "end" and env_val > upper_silence_threshold:
+            mask.append(["start", i])
 
     return np.array(mask)
 
@@ -35,31 +37,38 @@ def __compute_mask(audio_data):
 # function that processes a chunk of audio data
 @static_var(incomplete_signal=None, prev_state="")
 def breakup(audio_data): 
-    mask = compute_mask(audio_data)
+    mask = __compute_mask(audio_data)
+    if len(mask) == 0:
+        return np.array([]) 
 
     # Chop the last entry if the mask is incmplete
     temp_mask = mask[:-1] if mask[-1][0] == "start" else mask   
-    data_chunks = np.array([]) 
+    data_chunks = [] 
 
 
     # This section just deals with an incomplete signal from the previous chunk, the masking algorithm by design wont pick up on this
     if breakup.prev_state == "start":
         # our first chunk of audio equals the previous incomplete signal + the untracked section of the new signal
-        init_start = mask[0][1]
-        data_chunks.append(breakup.incomplete_signal + audio_data[:init_start])
+        init_start = int(mask[0][1]) # init_start will always be 0 but for the sake of readability yeh
+        init_end   = int(mask[1][1])
+
+        data_chunks.append(breakup.incomplete_signal + audio_data[init_start:init_end])
         breakup.incomplete_signal = None
         breakup.prev_state = ""
 
 
     # This chunk just appends the rest of the real audio signal to the final output
-    for i in range(len(temp_mask), step=2):
-        data_chunks.append([audio_data[temp_mask[i]: temp_mask[i+1]]])
+    for i in range(0, len(temp_mask), 2):
+        block_start = int(temp_mask[i][1])
+        block_end   = int(temp_mask[i+1][1])
+        data_chunks.append([audio_data[block_start:block_end]])
 
 
     # Now we just have to deal with incomplete signals, basically these get passed onto the next function call to deal with
-    if mask - temp_mask != None:
-        region = mask[-1][1]
+    if len(mask) != len(temp_mask):
+        region = int(mask[-1][1])
         breakup.incomplete_signal = audio_data[region:]
         breakup.prev_state = "start"
-    
-    return data_chunks
+
+
+    return np.array(data_chunks)
