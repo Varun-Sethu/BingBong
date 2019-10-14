@@ -1,6 +1,7 @@
 # Set of tests for individual functions within the library
 from bing import util
 from bing import processing
+from bing import musical_detection
 from bing.__init__ import SILENCE_THRESHOLD
 import matplotlib.pyplot as plt
 import pyaudio
@@ -62,4 +63,12 @@ def breakup_test():
     end = time.time()
     print(f"Executed Beakup in: {end - start}")
 
-breakup_test()
+
+def note_detection_test():
+    data = __sample_audio()
+    detector = musical_detection.Note_Detector()
+    detector.process(data)
+
+
+
+note_detection_test()
