@@ -11,7 +11,7 @@ class Bong(observer.Observer):
 
     # Observer methods
     def update(self, message):
-        
+        pass
 
 
 
