@@ -14,12 +14,12 @@ class Observer_Subject(ABC):
         pass
 
     @abstractmethod
-    def notify(self):
+    def notify(self, message):
         pass
 
 
 
 class Observer(ABC):
     @abstractmethod
-    def update(self, subject: Observer_Subject):
+    def update(self, message):
         pass

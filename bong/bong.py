@@ -9,6 +9,12 @@ class Bong(observer.Observer):
         current_configuration = configuration()
         current_configuration.parse("config.ini")
 
+    # Observer methods
+    def update(self, message):
+        
+
+
+
 
     # this function really isnt that nice :&
     def __handle_command(self, command):

@@ -25,9 +25,9 @@ class Note_Detector(observer.Observer_Subject):
     def detach(self, observer: observer.Observer):
         self.__current_observers.remove(observer)
     
-    def notify(self):
+    def notify(self, messages):
         for observer in self.__current_observers:
-            observer.update(self)
+            observer.update(self, message)
 
 
 
@@ -37,8 +37,7 @@ class Note_Detector(observer.Observer_Subject):
         for sound in detected_sounds:
             detected_note = self.__identify_note(chunk)
             if detected_note != None:
-                self.detected_notes.append(detected_note)
-                self.notify()
+                self.notify(detected_note)
 
 
 
