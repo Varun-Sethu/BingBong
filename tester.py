@@ -67,6 +67,17 @@ def breakup_test():
 def note_detection_test():
     data = __sample_audio()
     detector = musical_detection.Note_Detector()
+    chunks = processing.breakup(data)
+
+    for chunk in chunks:
+        #fourier = np.fft.fft(chunk)
+        fig = plt.figure()
+        s = fig.add_subplot(111)
+        s.plot(chunk)
+        #s.plot(np.abs(fourier))
+
+    plt.show()
+
     detector.process(data)
 
 

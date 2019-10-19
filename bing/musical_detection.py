@@ -1,9 +1,11 @@
 # Lib that just deals with the detection of musical notes
 import numpy as np
 from collections import deque
+from typing import List
 
 from .processing import breakup
 from . import util
+import ..observer as observer
 
 
 
@@ -11,9 +13,23 @@ from . import util
     
 
 
-class Note_Detector:
+class Note_Detector(observer.Observer_Subject):
     def __init__(self):
         self.detected_notes = deque()
+        self.__current_observers: List[observer.Observer] = []
+
+    # Observer logic
+    def attach(self, observer: observer.Observer):
+        self.__current_observers.append(observer)
+    
+    def detach(self, observer: observer.Observer):
+        self.__current_observers.remove(observer)
+    
+    def notify(self):
+        for observer in self.__current_observers:
+            observer.update(self)
+
+
 
 
     def process(self, chunk):
@@ -22,6 +38,7 @@ class Note_Detector:
             detected_note = self.__identify_note(chunk)
             if detected_note != None:
                 self.detected_notes.append(detected_note)
+                self.notify()
 
 
 
@@ -32,7 +49,7 @@ class Note_Detector:
 
         # Compute the frequency of the signal, if there is no absolute frequency then just trow it out
         fft_break = np.abs(np.fft.fft(signal))
-        dominant_freq = fft_break.argmax(axis=0)
+        dominant_freq = fft_break.argmax()
         mag = fft_break[dominant_freq]
 
         if mag/np.sum(fft_break) >= 0.8:

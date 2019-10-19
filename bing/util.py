@@ -62,7 +62,6 @@ def pad(x):
 # Function to compute the envelope of a signal
 def envelope(x):
     # basically this is an implementation of the exponential moving average
-    # https://www.investopedia.com/terms/e/ema.asp for more info
     # smooth out data
     data = np.abs(x)
     N = len(data)
