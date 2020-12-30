@@ -11,5 +11,3 @@ The application can easilly be configured by editing the config.ini file found a
 
 ## Components
 There are two components to the application... Bing and Bong. Bing handles note detection and audio signal processing while Bong handles system functions and the execution of commands. Currently Bing features a simple implentation of the recursive cooley-tukey algorithm and an exponential average to compute the envelope of the incoming audio signal
-
-BingBong *tries* to use the observer pattern :)
